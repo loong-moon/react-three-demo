@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import * as THREE from 'three';
 
-class CubeB extends Component {
+class Line extends Component {
     state = {};
     scene;
     camera;
@@ -96,9 +96,9 @@ class CubeB extends Component {
 
     render() {
         return (
-            <canvas ref={el => this.el = el}></canvas>
+            <canvas className="render-box" ref={el => this.el = el}></canvas>
         );
     }
 }
 
-export default CubeB;
+export default Line;

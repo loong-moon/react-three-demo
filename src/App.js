@@ -9,7 +9,8 @@ import { Layout, Menu } from 'antd';
 import logo from './logo.svg';
 import './App.css';
 import CubeA from './pages/CubeA'
-import CubeB from './pages/CubeB'
+import Line from './pages/Line'
+import CSS3dPanorama from './pages/CSS3dPanorama'
 
 const { Sider } = Layout;
 
@@ -35,13 +36,17 @@ class App extends Component {
                                 <Link to="/">CubeA</Link>
                             </Menu.Item>
                             <Menu.Item key="2">
-                                <Link to="/about">CubeB</Link>
+                                <Link to="/line">CubeB</Link>
+                            </Menu.Item>
+                            <Menu.Item key="3">
+                                <Link to="/css3d-panorama">CubeB</Link>
                             </Menu.Item>
                         </Menu>
                     </Sider>
                     <Layout className="app-right" style={{ marginLeft: 200 }}>
                         <Route exact path="/" component={CubeA}/>
-                        <Route path="/about" component={CubeB}/>
+                        <Route path="/line" component={Line}/>
+                        <Route path="/css3d-panorama" component={CSS3dPanorama}/>
                     </Layout>
                 </Layout>
             </Router>

@@ -58,7 +58,7 @@ class CubeA extends Component {
 
     render() {
         return (
-            <canvas ref={el => this.el = el}></canvas>
+            <canvas className="render-box" ref={el => this.el = el}></canvas>
         );
     }
 }
