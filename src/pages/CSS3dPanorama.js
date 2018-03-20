@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
-import posx from './static/cube/Bridge2/posx.jpg';
-import negx from './static/cube/Bridge2/negx.jpg';
-import posy from './static/cube/Bridge2/posy.jpg';
-import negy from './static/cube/Bridge2/negy.jpg';
-import posz from './static/cube/Bridge2/posz.jpg';
-import negz from './static/cube/Bridge2/negz.jpg';
+import posx from './assets/cube/Bridge2/posx.jpg';
+import negx from './assets/cube/Bridge2/negx.jpg';
+import posy from './assets/cube/Bridge2/posy.jpg';
+import negy from './assets/cube/Bridge2/negy.jpg';
+import posz from './assets/cube/Bridge2/posz.jpg';
+import negz from './assets/cube/Bridge2/negz.jpg';
 
-const THREE = require('three');
+// const THREE = require('three');
+const THREE = require('three/build/three');
 window.THREE = THREE;
 require('three/examples/js/renderers/CSS3DRenderer');
 
@@ -51,6 +53,8 @@ class css3dPanorama extends Component {
     // }
 
     componentDidMount(){
+        this.props.changePage()
+
         var camera, scene, renderer;
         // var geometry, material, mesh;
         var target = new THREE.Vector3();
@@ -155,7 +159,7 @@ class css3dPanorama extends Component {
             touchY = touch.screenY;
         }
         function animate() {
-            requestAnimationFrame( animate );
+            // requestAnimationFrame( animate );
             // lon +=  0.1;
             // lat = Math.max( - 85, Math.min( 85, lat ) );
             phi = THREE.Math.degToRad( 90 - lat );
@@ -175,4 +179,11 @@ class css3dPanorama extends Component {
     }
 }
 
-export default css3dPanorama;
+// 添加actions方法到组件props
+function mapDispatchToProps(dispatch) {
+    return {
+        changePage: () => dispatch({ type: 'changePage', pageName:['css3dPanorama'] })
+    }
+}
+
+export default  connect(null, mapDispatchToProps)(css3dPanorama);

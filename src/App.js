@@ -2,15 +2,20 @@ import React, { Component } from 'react';
 import {
     BrowserRouter as Router,
     Route,
+    Redirect,
     Link
 } from 'react-router-dom'
+import { connect } from 'react-redux'
 
 import { Layout, Menu } from 'antd';
 import logo from './logo.svg';
 import './App.css';
-import CubeA from './pages/CubeA'
+import Cube from './pages/Cube'
 import Line from './pages/Line'
 import CSS3dPanorama from './pages/CSS3dPanorama'
+import WebglPanorama from './pages/WebglPanorama'
+import CanvasPanorama from './pages/CanvasPanorama'
+import MagicCube from './pages/MagicCube'
 
 const { Sider } = Layout;
 
@@ -18,11 +23,17 @@ const { Sider } = Layout;
 class App extends Component {
 
     state = {
-        canvas: null,
+        // currentPage:['css3dPanorama']
     };
 
     componentDidMount() {
+        // console.log(this.props)
+    }
 
+    changePage(arr) {
+        this.setState({
+            currentPage: arr
+        });
     }
 
     render() {
@@ -31,28 +42,53 @@ class App extends Component {
                 <Layout>
                     <Sider style={{ overflow: 'auto', height: '100vh', position: 'fixed', left: 0 }}>
                         <div className="logo"><img src={logo} className="App-logo" alt="logo" /></div>
-                        <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
-                            <Menu.Item key="1">
-                                <Link to="/">CubeA</Link>
+                        <Menu theme="dark" mode="inline" defaultOpenKeys={['css3dPanorama']} selectedKeys={this.props.currentPage}>
+                            <Menu.Item key="cube">
+                                <Link to="/cube">Cube</Link>
                             </Menu.Item>
-                            <Menu.Item key="2">
-                                <Link to="/line">CubeB</Link>
+                            <Menu.Item key="line">
+                                <Link to="/line">line</Link>
                             </Menu.Item>
-                            <Menu.Item key="3">
-                                <Link to="/css3d-panorama">CubeB</Link>
+                            <Menu.Item key="css3dPanorama">
+                                <Link to="/css3d-panorama">css3d-panorama</Link>
+                            </Menu.Item>
+                            <Menu.Item key="webglPanorama">
+                                <Link to="/webgl-panorama">webgl-panorama</Link>
+                            </Menu.Item>
+                            <Menu.Item key="canvasPanorama">
+                                <Link to="/canvas-panorama">canvas-panorama</Link>
+                            </Menu.Item>
+                            <Menu.Item key="magicCube">
+                                <Link to="/magic-cube">magic-cube</Link>
                             </Menu.Item>
                         </Menu>
                     </Sider>
                     <Layout className="app-right" style={{ marginLeft: 200 }}>
-                        <Route exact path="/" component={CubeA}/>
+                        <Route exact path="/" render={() => <Redirect to='/css3d-panorama'/>}/>
+                        <Route exact path="/cube" component={Cube}/>
                         <Route path="/line" component={Line}/>
                         <Route path="/css3d-panorama" component={CSS3dPanorama}/>
+                        <Route path="/webgl-panorama" component={WebglPanorama}/>
+                        <Route path="/canvas-panorama" component={CanvasPanorama}/>
+                        <Route path="/magic-cube" component={MagicCube}/>
                     </Layout>
                 </Layout>
             </Router>
-
         );
     }
 }
 
-export default App;
+// 添加公共state到组件props
+function mapStateToProps(state) {
+    return {
+        currentPage: state.pageName
+    }
+}
+// // 添加actions方法到组件props
+// function mapDispatchToProps(dispatch) {
+//     return {
+//         onIncreaseClick: () => dispatch({ type: 'changePage', pageName:'' })
+//     }
+// }
+
+export default connect(mapStateToProps)(App);

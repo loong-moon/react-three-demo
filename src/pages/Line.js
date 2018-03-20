@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
-import * as THREE from 'three';
+import { connect } from 'react-redux'
+
+// const THREE = require('three');
+const THREE = require('three/build/three');
 
 class Line extends Component {
     state = {};
@@ -72,6 +75,7 @@ class Line extends Component {
     }
 
     componentDidMount(){
+        this.props.changePage()
         this.width = this.el.clientWidth
         this.height = this.el.clientHeight
 
@@ -101,4 +105,11 @@ class Line extends Component {
     }
 }
 
-export default Line;
+// 添加actions方法到组件props
+function mapDispatchToProps(dispatch) {
+    return {
+        changePage: () => dispatch({ type: 'changePage', pageName:['line'] })
+    }
+}
+
+export default connect(null, mapDispatchToProps)(Line);
