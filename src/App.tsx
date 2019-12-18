@@ -3,6 +3,7 @@ import {
     BrowserRouter as Router,
     Route,
     Redirect,
+    Switch,
     Link
 } from 'react-router-dom'
 import { connect } from 'react-redux'
@@ -14,7 +15,6 @@ import Cube from './pages/Cube'
 import Line from './pages/Line'
 import CSS3dPanorama from './pages/CSS3dPanorama'
 import WebglPanorama from './pages/WebglPanorama'
-import CanvasPanorama from './pages/CanvasPanorama'
 import MagicCube from './pages/MagicCube'
 
 const { Sider } = Layout;
@@ -27,10 +27,10 @@ class App extends Component {
     };
 
     componentDidMount() {
-        // console.log(this.props)
+        console.log(this.props, 'props')
     }
 
-    changePage(arr) {
+    changePage(arr: string[]) {
         this.setState({
             currentPage: arr
         });
@@ -42,7 +42,7 @@ class App extends Component {
                 <Layout>
                     <Sider style={{ overflow: 'auto', height: '100vh', position: 'fixed', left: 0 }}>
                         <div className="logo"><img src={logo} className="App-logo" alt="logo" /></div>
-                        <Menu theme="dark" mode="inline" defaultOpenKeys={['css3dPanorama']} selectedKeys={this.props.currentPage}>
+                        <Menu theme="dark" mode="inline">
                             <Menu.Item key="cube">
                                 <Link to="/cube">Cube</Link>
                             </Menu.Item>
@@ -55,22 +55,20 @@ class App extends Component {
                             <Menu.Item key="webglPanorama">
                                 <Link to="/webgl-panorama">webgl-panorama</Link>
                             </Menu.Item>
-                            <Menu.Item key="canvasPanorama">
-                                <Link to="/canvas-panorama">canvas-panorama</Link>
-                            </Menu.Item>
                             <Menu.Item key="magicCube">
                                 <Link to="/magic-cube">magic-cube</Link>
                             </Menu.Item>
                         </Menu>
                     </Sider>
                     <Layout className="app-right" style={{ marginLeft: 200 }}>
-                        <Route exact path="/" render={() => <Redirect to='/css3d-panorama'/>}/>
-                        <Route exact path="/cube" component={Cube}/>
-                        <Route path="/line" component={Line}/>
-                        <Route path="/css3d-panorama" component={CSS3dPanorama}/>
-                        <Route path="/webgl-panorama" component={WebglPanorama}/>
-                        <Route path="/canvas-panorama" component={CanvasPanorama}/>
-                        <Route path="/magic-cube" component={MagicCube}/>
+                        <Switch>
+                            <Route exact path="/" render={() => <Redirect to='/magic-cube'/>}/>
+                            <Route exact path="/cube" component={Cube}/>
+                            <Route path="/line" component={Line}/>
+                            <Route path="/css3d-panorama" component={CSS3dPanorama}/>
+                            <Route path="/webgl-panorama" component={WebglPanorama}/>
+                            <Route path="/magic-cube" component={MagicCube}/>
+                        </Switch>
                     </Layout>
                 </Layout>
             </Router>
@@ -79,7 +77,8 @@ class App extends Component {
 }
 
 // 添加公共state到组件props
-function mapStateToProps(state) {
+function mapStateToProps(state:any) {
+    console.log(state, 'mapStateToProps')
     return {
         currentPage: state.pageName
     }

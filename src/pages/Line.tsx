@@ -4,13 +4,14 @@ import { connect } from 'react-redux'
 // const THREE = require('three');
 const THREE = require('three/build/three');
 
-class Line extends Component {
+class Line extends Component<any, any> {
     state = {};
-    scene;
-    camera;
-    renderer;
-    width;
-    height;
+    scene: any;
+    camera: any;
+    renderer: any;
+    width: any;
+    height: any;
+    el: any;
 
     //初始化场景
     initScene(){
@@ -106,7 +107,7 @@ class Line extends Component {
 }
 
 // 添加actions方法到组件props
-function mapDispatchToProps(dispatch) {
+function mapDispatchToProps(dispatch: any) {
     return {
         changePage: () => dispatch({ type: 'changePage', pageName:['line'] })
     }

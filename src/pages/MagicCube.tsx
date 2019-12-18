@@ -1,44 +1,45 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-// const THREE = require('three');
-const THREE = require('three/build/three');
-window.THREE = THREE;
-require('three/examples/js/controls/OrbitControls');
+import * as THREE from "three"
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 
 
 
-class MagicCube extends Component {
+
+class MagicCube extends Component<any, any> {
+    el: any;
 
     componentDidMount(){
         this.props.changePage()
 
-        var renderer;//渲染器
-        var container = this.el;//容器
-        var width;//页面宽度
-        var height;//页面高度
-        var raycaster = new THREE.Raycaster();//光线碰撞检测器
-        var mouse = new THREE.Vector2();//存储鼠标坐标或者触摸坐标
-        var isRotating = false;//魔方是否正在转动
-        var intersect;//碰撞光线穿过的元素
-        var normalize;//触发平面法向量
-        var startPoint;//触发点
-        var movePoint;
-        var initStatus = [];//魔方初始状态
+        let win: any = window;
+        let renderer: THREE.WebGLRenderer;//渲染器
+        let container = this.el;//容器
+        let width: number;//页面宽度
+        let height: number;//页面高度
+        let raycaster = new THREE.Raycaster();//光线碰撞检测器
+        let mouse = new THREE.Vector2();//存储鼠标坐标或者触摸坐标
+        let isRotating = false;//魔方是否正在转动
+        let intersect: any;//碰撞光线穿过的元素
+        let normalize: any;//触发平面法向量
+        let startPoint: any;//触发点
+        let movePoint: any;
+        let initStatus: any[] | { x: any; y: any; z: any; cubeIndex: any; }[] = [];//魔方初始状态
         //魔方转动的六个方向
-        var xLine = new THREE.Vector3( 1, 0, 0 );//X轴正方向
-        var xLineAd = new THREE.Vector3( -1, 0, 0 );//X轴负方向
-        var yLine = new THREE.Vector3( 0, 1, 0 );//Y轴正方向
-        var yLineAd = new THREE.Vector3( 0, -1, 0 );//Y轴负方向
-        var zLine = new THREE.Vector3( 0, 0, 1 );//Z轴正方向
-        var zLineAd = new THREE.Vector3( 0, 0, -1 );//Z轴负方向
+        let xLine = new THREE.Vector3( 1, 0, 0 );//X轴正方向
+        let xLineAd = new THREE.Vector3( -1, 0, 0 );//X轴负方向
+        let yLine = new THREE.Vector3( 0, 1, 0 );//Y轴正方向
+        let yLineAd = new THREE.Vector3( 0, -1, 0 );//Y轴负方向
+        let zLine = new THREE.Vector3( 0, 0, 1 );//Z轴正方向
+        let zLineAd = new THREE.Vector3( 0, 0, -1 );//Z轴负方向
 
-        window.requestAnimFrame = (function() {//如果有变化则可能还需要requestAnimationFrame刷新
-            return window.requestAnimationFrame ||
-                window.mozRequestAnimationFrame ||
-                window.webkitRequestAnimationFrame ||
-                window.msRequestAnimationFrame ||
-                window.webkitRequestAnimationFrame;
+        win.requestAnimFrame = (() => {//如果有变化则可能还需要requestAnimationFrame刷新
+            return win.requestAnimationFrame ||
+            win.mozRequestAnimationFrame ||
+            win.webkitRequestAnimationFrame ||
+            win.msRequestAnimationFrame ||
+            win.webkitRequestAnimationFrame;
         })();
 
         //根据页面宽度和高度创建渲染器，并添加容器中
@@ -56,8 +57,8 @@ class MagicCube extends Component {
         }
 
         //创建相机，并设置正方向和中心点
-        var camera;
-        var controller;//视角控制器
+        let camera: THREE.PerspectiveCamera;
+        let controller: OrbitControls;//视角控制器
         function initCamera() {
             camera = new THREE.PerspectiveCamera(45, width / height, 1, 1000);
             camera.position.x = 0; //相机所在的位置
@@ -80,7 +81,7 @@ class MagicCube extends Component {
         }
 
         //创建场景，后续元素需要加入到场景中才会显示出来
-        var scene;
+        var scene: THREE.Scene;
         function initScene() {
             scene = new THREE.Scene();
         }
@@ -110,7 +111,7 @@ class MagicCube extends Component {
          * len 魔方单位正方体宽高
          * colors 魔方六面体颜色
          */
-        function SimpleCube(cubeParams){
+        function SimpleCube(cubeParams: { x: any; y: any; z: any; num: any; len: any; colors: any; }){
             var cubes = [];
             var x = cubeParams.x,
                 y = cubeParams.y,
@@ -118,8 +119,8 @@ class MagicCube extends Component {
                 num = cubeParams.num,
                 len = cubeParams.len,
                 colors = cubeParams.colors;
-            for(let i=0;i<num;i++){
-                for(var j=0;j<num*num;j++){
+            for(let i=0; i<num; i++){
+                for(var j=0; j<num*num; j++){
                     var cubegeo = new THREE.BoxGeometry(len,len,len);
                     var materials = [];
                     var myFaces = [];
@@ -151,7 +152,7 @@ class MagicCube extends Component {
         }
 
         //生成canvas素材
-        function faces(rgbaColor) {
+        function faces(rgbaColor: string | CanvasGradient | CanvasPattern) {
             var canvas = document.createElement('canvas');
             canvas.width = 256;
             canvas.height = 256;
@@ -175,7 +176,7 @@ class MagicCube extends Component {
         }
 
         //创建展示场景所需的各种元素
-        var cubes
+        let cubes: any[]
         function initObject() {
             //生成魔方小正方体
             cubes = SimpleCube(cubeParams);
@@ -198,14 +199,14 @@ class MagicCube extends Component {
             }
 
             //透明正方体
-            var cubegeo = new THREE.BoxGeometry(150,150,150);
-            var hex = 0x000000;
+            let cubegeo = new THREE.BoxGeometry(150,150,150);
+            let hex = 0x000000;
             for ( let i = 0; i < cubegeo.faces.length; i += 2 ) {
                 cubegeo.faces[ i ].color.setHex( hex );
                 cubegeo.faces[ i + 1 ].color.setHex( hex );
             }
-            var cubemat = new THREE.MeshBasicMaterial({vertexColors: THREE.FaceColors,opacity: 0, transparent: true});
-            var cube = new THREE.Mesh( cubegeo, cubemat );
+            let cubemat: any = new THREE.MeshBasicMaterial({vertexColors: THREE.FaceColors,opacity: 0, transparent: true});
+            let cube: any = new THREE.Mesh( cubegeo, cubemat );
             cube.cubeType = 'coverCube';
             scene.add( cube );
         }
@@ -214,7 +215,7 @@ class MagicCube extends Component {
         function render(){
             renderer.clear();
             renderer.render(scene, camera);
-            window.requestAnimFrame(render);
+            win.requestAnimFrame(render);
         }
 
         //开始
@@ -235,7 +236,7 @@ class MagicCube extends Component {
             renderer.domElement.addEventListener('touchend', stopCube, false);
 
             //视角控制
-            controller = new THREE.OrbitControls(camera, renderer.domElement);
+            controller = new OrbitControls(camera, renderer.domElement);
             controller.target = new THREE.Vector3(200, 0, 0);//设置控制点
         }
 
@@ -246,7 +247,7 @@ class MagicCube extends Component {
         }
 
         //绕着世界坐标系的某个轴旋转
-        function rotateAroundWorldY(obj,rad){
+        function rotateAroundWorldY(obj: any, rad: number){
             var x0 = obj.position.x;
             var z0 = obj.position.z;
             /**
@@ -261,7 +262,7 @@ class MagicCube extends Component {
             obj.position.x = Math.cos(rad)*x0+Math.sin(rad)*z0;
             obj.position.z = Math.cos(rad)*z0-Math.sin(rad)*x0;
         }
-        function rotateAroundWorldZ(obj,rad){
+        function rotateAroundWorldZ(obj: any, rad: number){
             var x0 = obj.position.x;
             var y0 = obj.position.y;
             var q = new THREE.Quaternion();
@@ -271,7 +272,7 @@ class MagicCube extends Component {
             obj.position.x = Math.cos(rad)*x0-Math.sin(rad)*y0;
             obj.position.y = Math.cos(rad)*y0+Math.sin(rad)*x0;
         }
-        function rotateAroundWorldX(obj,rad){
+        function rotateAroundWorldX(obj: any, rad: number){
             var y0 = obj.position.y;
             var z0 = obj.position.z;
             var q = new THREE.Quaternion();
@@ -283,7 +284,7 @@ class MagicCube extends Component {
         }
 
         //滑动操作魔方
-        function moveCube(event){
+        function moveCube(event: any){
             getIntersects(event);
             if(intersect){
                 if(!isRotating&&startPoint){//魔方没有进行转动且满足进行转动的条件
@@ -294,8 +295,8 @@ class MagicCube extends Component {
                         var direction = getDirection(sub);//获得方向
                         var elements = getBoxs(intersect,direction);
                         // var startTime = new Date().getTime();
-                        window.requestAnimFrame(function(timestamp){
-                            rotateAnimation(elements,direction,timestamp,0);
+                        win.requestAnimFrame(function(timestamp: any){
+                            rotateAnimation(elements, direction,timestamp, 0);
                         });
                     }
                 }
@@ -306,7 +307,7 @@ class MagicCube extends Component {
         /**
          * 旋转动画
          */
-        function rotateAnimation(elements,direction,currentstamp,startstamp,laststamp){
+        function rotateAnimation(elements: any[], direction: any, currentstamp: any, startstamp: any, laststamp?: any){
             var totalTime = 500;//转动的总运动时间
             if(startstamp===0){
                 startstamp = currentstamp;
@@ -327,7 +328,7 @@ class MagicCube extends Component {
                 case 2.4:
                 case 3.3:
                     for(let i=0;i<elements.length;i++){
-                        rotateAroundWorldZ(elements[i],-90*Math.PI/180*(currentstamp-laststamp)/totalTime);
+                        rotateAroundWorldZ(elements[i],-90*Math.PI/180*(currentstamp - laststamp)/totalTime);
                     }
                     break;
                 //绕z轴逆时针
@@ -336,7 +337,7 @@ class MagicCube extends Component {
                 case 2.3:
                 case 3.4:
                     for(let i=0;i<elements.length;i++){
-                        rotateAroundWorldZ(elements[i],90*Math.PI/180*(currentstamp-laststamp)/totalTime);
+                        rotateAroundWorldZ(elements[i],90*Math.PI/180*(currentstamp - laststamp)/totalTime);
                     }
                     break;
                 //绕y轴顺时针
@@ -345,7 +346,7 @@ class MagicCube extends Component {
                 case 4.3:
                 case 5.4:
                     for(let i=0;i<elements.length;i++){
-                        rotateAroundWorldY(elements[i],-90*Math.PI/180*(currentstamp-laststamp)/totalTime);
+                        rotateAroundWorldY(elements[i],-90*Math.PI/180*(currentstamp - laststamp)/totalTime);
                     }
                     break;
                 //绕y轴逆时针
@@ -354,7 +355,7 @@ class MagicCube extends Component {
                 case 4.4:
                 case 5.3:
                     for(let i=0;i<elements.length;i++){
-                        rotateAroundWorldY(elements[i],90*Math.PI/180*(currentstamp-laststamp)/totalTime);
+                        rotateAroundWorldY(elements[i],90*Math.PI/180*(currentstamp - laststamp)/totalTime);
                     }
                     break;
                 //绕x轴顺时针
@@ -363,7 +364,7 @@ class MagicCube extends Component {
                 case 4.1:
                 case 5.2:
                     for(let i=0;i<elements.length;i++){
-                        rotateAroundWorldX(elements[i],90*Math.PI/180*(currentstamp-laststamp)/totalTime);
+                        rotateAroundWorldX(elements[i],90*Math.PI/180*(currentstamp - laststamp)/totalTime);
                     }
                     break;
                 //绕x轴逆时针
@@ -372,21 +373,21 @@ class MagicCube extends Component {
                 case 4.2:
                 case 5.1:
                     for(let i=0;i<elements.length;i++){
-                        rotateAroundWorldX(elements[i],-90*Math.PI/180*(currentstamp-laststamp)/totalTime);
+                        rotateAroundWorldX(elements[i],-90*Math.PI/180*(currentstamp - laststamp)/totalTime);
                     }
                     break;
                 default:
                     break;
             }
             if(currentstamp-startstamp<totalTime){
-                window.requestAnimFrame(function(timestamp){
-                    rotateAnimation(elements,direction,timestamp,startstamp,currentstamp);
+                win.requestAnimFrame(function(timestamp: any){
+                    rotateAnimation(elements, direction, timestamp, startstamp, currentstamp);
                 });
             }
         }
 
         //更新位置索引
-        function updateCubeIndex(elements){
+        function updateCubeIndex(elements: any[]){
             for(let i=0;i<elements.length;i++){
                 var temp1 = elements[i];
                 for(var j=0;j<initStatus.length;j++){
@@ -416,7 +417,7 @@ class MagicCube extends Component {
         }
 
         //根据方向获得运动元素
-        function getBoxs(target,direction){
+        function getBoxs(target: { object: { cubeIndex: any; }; },direction: number | undefined){
             var targetId = target.object.cubeIndex;
             var ids = [];
             for(let i=0;i<cubes.length;i++){
@@ -484,7 +485,7 @@ class MagicCube extends Component {
         }
 
         //获得旋转方向
-        function getDirection(vector3){
+        function getDirection(vector3: { angleTo: { (arg0: THREE.Vector3): void; (arg0: THREE.Vector3): void; (arg0: THREE.Vector3): void; (arg0: THREE.Vector3): void; (arg0: THREE.Vector3): void; (arg0: THREE.Vector3): void; }; }){
             var direction;
             //判断差向量和x、y、z轴的夹角
             var xAngle = vector3.angleTo(xLine);
@@ -575,7 +576,7 @@ class MagicCube extends Component {
         }
 
         //获取数组中的最小值
-        function min(arr){
+        function min(arr: any[]){
             var min = arr[0];
             for(let i=1;i<arr.length;i++){
                 if(arr[i]<min){
@@ -586,7 +587,7 @@ class MagicCube extends Component {
         }
 
         //开始操作魔方
-        function startCube(event){
+        function startCube(event: any){
             getIntersects(event);
             //魔方没有处于转动过程中且存在碰撞物体
             if(!isRotating&&intersect){
@@ -598,7 +599,7 @@ class MagicCube extends Component {
         }
 
         //获取操作焦点以及该焦点所在平面的法向量
-        function getIntersects(event){
+        function getIntersects(event: { touches: any[]; clientX: number; clientY: number; }){
             //触摸事件和鼠标事件获得坐标的方式有点区别
             if(event.touches){
                 var touch = event.touches[0];
@@ -612,13 +613,15 @@ class MagicCube extends Component {
             //Raycaster方式定位选取元素，可能会选取多个，以第一个为准
             var intersects = raycaster.intersectObjects(scene.children);
             if(intersects.length){
+                let inter0: any = intersects[0]
+                let inter1: any = intersects[1]
                 try{
-                    if(intersects[0].object.cubeType==='coverCube'){
-                        intersect = intersects[1];
-                        normalize = intersects[0].face.normal;
+                    if(inter0.object.cubeType==='coverCube'){
+                        intersect = inter1;
+                        normalize = inter0.face.normal;
                     }else{
-                        intersect = intersects[0];
-                        normalize = intersects[1].face.normal;
+                        intersect = inter0;
+                        normalize = inter1.face.normal;
                     }
                 }catch(err){
                     //nothing
@@ -638,7 +641,7 @@ class MagicCube extends Component {
 }
 
 // 添加actions方法到组件props
-function mapDispatchToProps(dispatch) {
+function mapDispatchToProps(dispatch: (arg0: { type: string; pageName: string[]; }) => void) {
     return {
         changePage: () => dispatch({ type: 'changePage', pageName:['magicCube'] })
     }

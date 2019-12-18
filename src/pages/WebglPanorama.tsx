@@ -8,22 +8,21 @@ import negy from './assets/cube/Bridge2/negy.jpg';
 import posz from './assets/cube/Bridge2/posz.jpg';
 import negz from './assets/cube/Bridge2/negz.jpg';
 
-// const THREE = require('three');
-const THREE = require('three/build/three');
-window.THREE = THREE;
-require('three/examples/js/controls/OrbitControls');
+import * as THREE from "three"
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 
 
 
-class WebglPanorama extends Component {
+class WebglPanorama extends Component<any, any> {
+    el: any;
 
     componentDidMount(){
         this.props.changePage()
 
-        var camera, controls;
-        var renderer;
-        var scene;
-        var container = this.el;
+        let camera: THREE.PerspectiveCamera, controls: OrbitControls;
+        let renderer: THREE.WebGLRenderer;
+        let scene: THREE.Scene;
+        let container = this.el;
         init();
         animate();
         function init() {
@@ -35,7 +34,7 @@ class WebglPanorama extends Component {
             scene = new THREE.Scene();
             camera = new THREE.PerspectiveCamera( 90, container.clientWidth / container.clientHeight, 0.1, 100 );
             camera.position.z = 0.01;
-            controls = new THREE.OrbitControls( camera, renderer.domElement );
+            controls = new OrbitControls( camera, renderer.domElement );
             controls.enableZoom = false;
             controls.enablePan = false;
             controls.enableDamping = true;
@@ -46,7 +45,7 @@ class WebglPanorama extends Component {
             scene.add( skyBox );
             window.addEventListener( 'resize', onWindowResize, false );
         }
-        function addTexture(imgs){
+        function addTexture(imgs: any[]){
             var materials = [], texture;
             for (var i = 0; i < imgs.length; i ++){
                 texture = new THREE.TextureLoader().load( imgs[i] );
@@ -78,7 +77,7 @@ class WebglPanorama extends Component {
 }
 
 // 添加actions方法到组件props
-function mapDispatchToProps(dispatch) {
+function mapDispatchToProps(dispatch: any) {
     return {
         changePage: () => dispatch({ type: 'changePage', pageName:['webglPanorama'] })
     }

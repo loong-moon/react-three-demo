@@ -1,17 +1,17 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux'
+import React, {Component} from 'react';
+import {connect} from 'react-redux'
 
-// const THREE = require('three');
-const THREE = require('three/build/three');
+import * as THREE from "three"
 
-class Cube extends Component {
+class Cube extends Component<any, any> {
     state = {};
-    scene;
-    camera;
-    renderer;
-    cube;
-    width;
-    height;
+    scene: any;
+    camera: any;
+    renderer: any;
+    cube: any;
+    width: any;
+    height: any;
+    el: any;
 
     //初始化场景
     initScene(){
@@ -33,7 +33,7 @@ class Cube extends Component {
 
     //初始化渲染器
     initRenderer(){
-        this.renderer = new THREE.WebGLRenderer({canvas:this.el});
+        this.renderer = new THREE.WebGLRenderer({canvas: this.el});
         this.renderer.setSize(this.width, this.height);
     }
 
@@ -67,7 +67,7 @@ class Cube extends Component {
     }
 
     componentDidMount(){
-        // console.log(this.props)
+        console.log(this, 'cubeComponent')
         this.props.changePage()
         // this.props.setCurrentPage('end')
 
@@ -97,7 +97,7 @@ class Cube extends Component {
 
 
 // 添加actions方法到组件props
-function mapDispatchToProps(dispatch) {
+function mapDispatchToProps(dispatch: any) {
     return {
         changePage: () => dispatch({ type: 'changePage', pageName:['cube'] })
     }
