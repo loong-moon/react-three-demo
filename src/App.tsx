@@ -11,11 +11,11 @@ import { connect } from 'react-redux'
 import { Layout, Menu } from 'antd';
 import logo from './logo.svg';
 import './App.css';
-import Cube from './pages/Cube'
-import Line from './pages/Line'
-import CSS3dPanorama from './pages/CSS3dPanorama'
-import WebglPanorama from './pages/WebglPanorama'
-import MagicCube from './pages/MagicCube'
+// import Cube from './pages/Cube'
+// import Line from './pages/Line'
+// import CSS3dPanorama from './pages/CSS3dPanorama'
+// import WebglPanorama from './pages/WebglPanorama'
+// import MagicCube from './pages/MagicCube'
 
 const { Sider } = Layout;
 
@@ -61,14 +61,14 @@ class App extends Component {
                         </Menu>
                     </Sider>
                     <Layout className="app-right" style={{ marginLeft: 200 }}>
-                        <Switch>
+                        {/* <Switch>
                             <Route exact path="/" render={() => <Redirect to='/magic-cube'/>}/>
                             <Route exact path="/cube" component={Cube}/>
                             <Route path="/line" component={Line}/>
                             <Route path="/css3d-panorama" component={CSS3dPanorama}/>
                             <Route path="/webgl-panorama" component={WebglPanorama}/>
                             <Route path="/magic-cube" component={MagicCube}/>
-                        </Switch>
+                        </Switch> */}
                     </Layout>
                 </Layout>
             </Router>
